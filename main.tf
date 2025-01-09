@@ -62,10 +62,10 @@ resource "aws_eip" "priv-eip" {
 
 resource "aws_nat_gateway" "terra-nat" {
   allocation_id = aws_eip.priv-eip.id
-  subnet_id     = aws_subnet.terra-priv-subnet.id
+  subnet_id     = aws_subnet.terra-pub-subnet.id
 
   tags = {
-    Name = "terra-priv-nat"
+    Name = "terra-pub-nat"
   }
 }
 
@@ -74,7 +74,7 @@ resource "aws_route_table" "terra-priv-rt" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_eip.priv-eip.id
+    nat_gateway_id = aws_nat_gateway.terra-nat.id
   }
   tags = {
     Name = "terra-priv-rt"
