@@ -5,7 +5,7 @@ provider "aws" {
 
 resource "aws_vpc" "terra-vpc" {
   cidr_block       = "10.0.0.0/16"
- enable_dns_hostnames = "true"
+  enable_dns_hostnames = "true"
 
   tags = {
     Name = "terra-vpc"
@@ -38,7 +38,6 @@ resource "aws_subnet" "terra-priv-subnet" {
   }
 }
 
-
 resource "aws_route_table" "terra-pub-rt" {
   vpc_id = aws_vpc.terra-vpc.id
 
@@ -57,7 +56,7 @@ resource "aws_route_table_association" "terra-pub-rta" {
 }
 
 resource "aws_eip" "priv-eip" {
-  vpc = true
+  domain = "vpc"  # Correct domain usage
 }
 
 resource "aws_nat_gateway" "terra-nat" {
@@ -95,20 +94,17 @@ resource "aws_security_group" "terra-sg" {
     Name = "allow_all"
   }
 
-    ingress {
+  ingress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-     }
+  }
 
-    egress {
+  egress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-     }
-       tags = {
-    Name = "terra-sg"
   }
 }
